@@ -1,8 +1,17 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import dotenv from "dotenv";
+import { Pool } from 'pg';
+import { drizzle } from 'drizzle-orm/pg';
 
-dotenv.config(); // Load environment variables
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
-const client = postgres(process.env.DATABASE_URL);
-export const db = drizzle(client);
+export const db = drizzle(pool, {
+  schema: {
+    articles: {
+      title: 'text',
+      link: 'text',
+      snippet: 'text',
+      category: 'text',
+    },
+  },
+});
